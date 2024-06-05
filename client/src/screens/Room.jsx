@@ -9,6 +9,8 @@ const RoomPage = () => {
   const [remoteSocketId, setRemoteSocketId] = useState(null);
   const [myStream, setMyStream] = useState();
   const [remoteStream, setRemoteStream] = useState();
+  const [isMyWebcamOn, setIsMyWebcamOn] = useState(true);
+  const [isRemoteWebcamOn, setIsRemoteWebcamOn] = useState(true);
 
   const handleUserJoined = useCallback(({ email, id }) => {
     console.log(`Email ${email} joined room`);
@@ -110,6 +112,20 @@ const RoomPage = () => {
     handleNegoNeedFinal,
   ]);
 
+  const toggleMyWebcam = () => {
+    if (myStream) {
+      const videoTrack = myStream.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.enabled = !videoTrack.enabled;
+        setIsMyWebcamOn(videoTrack.enabled);
+      }
+    }
+  };
+
+  const toggleRemoteWebcam = () => {
+    setIsRemoteWebcamOn(!isRemoteWebcamOn);
+  };
+
   return (
     <div className="roompage-container">
       <h1 className="roompage-heading">Room Page</h1>
@@ -128,12 +144,25 @@ const RoomPage = () => {
         <div className="roompage-stream-container">
           <h1 className="roompage-stream-heading">My Stream</h1>
           <ReactPlayer playing muted height="200px" width="500px" url={myStream} />
+          <button className="roompage-button" onClick={toggleMyWebcam}>
+            {isMyWebcamOn ? "Turn Webcam Off" : "Turn Webcam On"}
+          </button>
         </div>
       )}
       {remoteStream && (
         <div className="roompage-stream-container">
           <h1 className="roompage-stream-heading">Remote Stream</h1>
-          <ReactPlayer playing muted height="200px" width="500px" url={remoteStream} />
+          <ReactPlayer
+            playing
+            muted
+            height="200px"
+            width="500px"
+            url={remoteStream}
+            style={{ display: isRemoteWebcamOn ? "block" : "none" }}
+          />
+          <button className="roompage-button" onClick={toggleRemoteWebcam}>
+            {isRemoteWebcamOn ? "Turn Remote Webcam Off" : "Turn Remote Webcam On"}
+          </button>
         </div>
       )}
     </div>
