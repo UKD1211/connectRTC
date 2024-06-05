@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useState } from "react";
 import ReactPlayer from "react-player";
 import peer from "../service/peer";
 import { useSocket } from "../context/SocketProvider";
+import "./RoomPage.css"; // Import the new CSS file
 
 const RoomPage = () => {
   const socket = useSocket();
@@ -110,34 +111,30 @@ const RoomPage = () => {
   ]);
 
   return (
-    <div>
-      <h1>Room Page</h1>
-      <h4>{remoteSocketId ? "Connected" : "No one in room"}</h4>
-      {myStream && <button onClick={sendStreams}>Send Stream</button>}
-      {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
+    <div className="roompage-container">
+      <h1 className="roompage-heading">Room Page</h1>
+      <h4 className="roompage-subheading">{remoteSocketId ? "Connected" : "No one in room"}</h4>
       {myStream && (
-        <>
-          <h1>My Stream</h1>
-          <ReactPlayer
-            playing
-            muted
-            height="200px"
-            width="500px"
-            url={myStream}
-          />
-        </>
+        <button className="roompage-button" onClick={sendStreams}>
+          Send Stream
+        </button>
+      )}
+      {remoteSocketId && (
+        <button className="roompage-button" onClick={handleCallUser}>
+          CALL
+        </button>
+      )}
+      {myStream && (
+        <div className="roompage-stream-container">
+          <h1 className="roompage-stream-heading">My Stream</h1>
+          <ReactPlayer playing muted height="200px" width="500px" url={myStream} />
+        </div>
       )}
       {remoteStream && (
-        <>
-          <h1>Remote Stream</h1>
-          <ReactPlayer
-            playing
-            muted
-            height="200px"
-            width="500px"
-            url={remoteStream}
-          />
-        </>
+        <div className="roompage-stream-container">
+          <h1 className="roompage-stream-heading">Remote Stream</h1>
+          <ReactPlayer playing muted height="200px" width="500px" url={remoteStream} />
+        </div>
       )}
     </div>
   );
